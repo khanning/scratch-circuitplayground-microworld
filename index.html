@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Scratch-Arduino</title>
+  <title>Circuit Playground Microworld</title>
 
   <script type="text/javascript" src="./blockly_compressed_vertical.js"></script>
   <script type="text/javascript" src="./blocks_compressed.js"></script>
@@ -15,8 +15,19 @@
   <script src="./js/main.js"></script>
 
   <link rel="stylesheet" type="text/css" href="./main.css">
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
+
+    <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('ServiceWorker registration successful with scope:',  registration.scope);
+      }).catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+      }
+    </script>
 
   <xml id="video-toolbox" style="display: none">
 
