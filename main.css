@@ -1,0 +1,155 @@
+#menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 48px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #212f47;
+    color: white;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.menu-button {
+  float: left;
+  display: block;
+  height: 48px;
+  padding: 0 10px;
+  line-height: 48px;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: #1e2a3f;
+}
+
+#project-name {
+    float: left;
+    height: 48px;
+    line-height: 48px;
+}
+
+#project-name-input {
+    border: 1px dashed hsla(0, 0%, 0%, 0.15);
+    -webkit-border-radius: calc(0.5rem / 2);
+    padding: 5px;
+    font-size: 1em;
+    background-color: #1e2a3f;
+    color: white;
+}
+
+#download-icon {
+    background-color: #87D37C;
+}
+
+#download-icon img {
+    width: 26px;
+    margin: 7px;
+}
+
+#bluetooth-icon {
+    background-color: #0A3C91;
+}
+
+#bluetooth-icon.connected {
+    background-color: #4DAF7C;
+}
+
+#bluetooth-icon.disconnected {
+    background-color: #E68364;
+}
+
+#save-icon {
+    background-color: #0A3C91;
+}
+
+.icon {
+    float: right;
+    height: 40px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+#video-toolbox {
+    display: none;
+}
+
+#blocks {
+    position: absolute;
+    left: 0;
+    top: 48px;
+    bottom: 0;
+    width: 100%;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#blocks-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1e2a3f;
+    z-index: 50;
+}
+
+#blocks-overlay.hide-overlay {
+    transition: opacity .2s linear, width 0s .2s, height 0s .2s;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+#blocks-overlay.show-overlay {
+    transition: opacity .2s linear, width 0s, height 0s;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+.scratchCategoryMenu {
+    background-color: #1e2a3f;
+    color: white;
+}
+
+.scratchCategoryMenuItem.categorySelected {
+    background-color: #2a3b5c;
+}
+
+.blocklyToolboxDiv {
+    background-color: #1e2a3f;
+    transition: left .3s linear;
+}
+
+#buttons-menu {
+    position: absolute;
+    width: 64px;
+    left: 310px;
+    top: 0;
+    opacity: .8;
+    transition: left .3s linear;
+}
+
+.blocklyMainBackground {
+    stroke: none !important;
+}
+
+.blocklyScrollbarHorizontal {
+    display: none !important;
+}
+
+.blocklyScrollbarVertical {
+    display: none !important;
+}
+
+.flyoutOpen {
+    transform: translate(64px, 0) !important;
+}
+
+.flyoutHalfOpen {
+    transform: translate(0px, 0) !important;
+}
+
+.flyoutClosed {
+    transform: translate(-280px, 0) !important;
+}

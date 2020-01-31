@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="20px"
+   height="20px"
+   viewBox="0 0 20 20"
+   version="1.1"
+   id="svg2">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>connected</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title4">connected</title>
+  <desc
+     id="desc6">Created with Sketch.</desc>
+  <defs
+     id="defs8">
+    <style
+       id="style3411">.cls-1{opacity:0.15;}.cls-2{fill:#fff;}.cls-3{opacity:0.3;}.cls-4{opacity:0.1;}</style>
+  </defs>
+  <circle
+     id="Oval"
+     cx="10"
+     cy="10"
+     r="10"
+     style="fill:#808080;fill-rule:evenodd;stroke:none;stroke-width:1;fill-opacity:1" />
+  <path
+     style="fill:#ffffff"
+     d="m 15.626819,11.043293 0,-2.0631542 L 14.360785,8.769133 C 14.267018,8.4174568 14.126348,8.0892123 13.962206,7.8078713 L 14.712461,6.7763145 13.258853,5.2992746 12.203824,6.0260586 C 11.899052,5.8619563 11.570807,5.7212859 11.242603,5.6274787 l -0.211006,-1.2425623 -2.0631936,0 -0.2110061,1.2660343 C 8.4057217,5.7447176 8.1009487,5.8853881 7.7961764,6.0494902 L 6.7645791,5.3227063 5.2875388,6.7763145 6.0377949,7.8078713 C 5.8736927,8.1126842 5.7330223,8.4408885 5.6392152,8.7925647 l -1.2660347,0.1875741 0,2.0631542 1.2660346,0.211005 c 0.093767,0.351676 0.2344374,0.656489 0.3985798,0.961262 l -0.7502562,1.055029 1.4536086,1.453608 1.055029,-0.750256 c 0.3047723,0.164102 0.6330171,0.304773 0.9846934,0.39858 l 0.2110055,1.242563 2.0631538,0 0.211005,-1.266034 c 0.328245,-0.09377 0.656449,-0.234439 0.961262,-0.39854 l 1.055029,0.750216 1.453568,-1.453569 -0.750216,-1.055028 c 0.164103,-0.304813 0.304773,-0.609586 0.39854,-0.961262 l 1.242602,-0.187574 z M 10,12.168657 c -1.1956988,0 -2.1569607,-0.961222 -2.1569607,-2.156921 0,-1.1956994 0.9846941,-2.1569612 2.1569607,-2.1569612 1.172267,0 2.156961,0.9612618 2.156961,2.1569612 0,1.195699 -0.961261,2.156921 -2.156961,2.156921 z"
+     id="path4187" />
+</svg>

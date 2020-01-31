@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Scratch-Arduino</title>
+
+  <script type="text/javascript" src="./blockly_compressed_vertical.js"></script>
+  <script type="text/javascript" src="./blocks_compressed.js"></script>
+  <script type="text/javascript" src="./blocks_compressed_vertical.js"></script>
+  <script type="text/javascript" src="./en.js"></script>
+  <script src="./scratch-vm.min.js"></script>
+  <script src="./js/webbt.js"></script>
+  <script src="./js/symbols.js"></script>
+  <script src="./js/block-encoder.js"></script>
+  <script src="./js/main.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="./main.css">
+</head>
+<body>
+
+  <xml id="video-toolbox" style="display: none">
+
+    <category name="Events" id="Events" colour="#FFD500" secondaryColour="#CC9900">
+      <block type="event_whenflagclicked"></block>
+    </category>
+
+		<category name="Control" id="Control" colour="#FFAB19" secondaryColour="#CF8B17">
+      <block type="control_wait">
+        <value name="DURATION">
+          <shadow type="math_positive_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <sep gap="36"></sep>
+      <block type="control_repeat">
+        <value name="TIMES">
+          <shadow type="math_whole_number">
+            <field name="NUM">4</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="control_forever"></block>
+      <sep gap="36"></sep>
+      <block type="control_stop"/>
+    </category>
+
+
+		<category name="Operators" id="operators" colour="#40BF4A" secondaryColour="#389438">
+			<block type="operator_add">
+					<value name="NUM1">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+					<value name="NUM2">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+			</block>
+			<block type="operator_subtract">
+					<value name="NUM1">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+					<value name="NUM2">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+			</block>
+			<block type="operator_multiply">
+					<value name="NUM1">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+					<value name="NUM2">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+			</block>
+			<block type="operator_divide">
+					<value name="NUM1">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+					<value name="NUM2">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+			</block>
+      <sep gap="36"></sep>
+			<block type="operator_random">
+					<value name="FROM">
+							<shadow type="math_number">
+									<field name="NUM">1</field>
+							</shadow>
+					</value>
+					<value name="TO">
+							<shadow type="math_number">
+									<field name="NUM">10</field>
+							</shadow>
+					</value>
+			</block>
+      <sep gap="36"></sep>
+			<block type="operator_gt">
+					<value name="OPERAND1">
+							<shadow type="text">
+									<field name="TEXT"/>
+							</shadow>
+					</value>
+					<value name="OPERAND2">
+							<shadow type="text">
+									<field name="TEXT">50</field>
+							</shadow>
+					</value>
+			</block>
+			<block type="operator_lt">
+					<value name="OPERAND1">
+							<shadow type="text">
+									<field name="TEXT"/>
+							</shadow>
+					</value>
+					<value name="OPERAND2">
+							<shadow type="text">
+									<field name="TEXT">50</field>
+							</shadow>
+					</value>
+			</block>
+			<block type="operator_equals">
+					<value name="OPERAND1">
+							<shadow type="text">
+									<field name="TEXT"/>
+							</shadow>
+					</value>
+					<value name="OPERAND2">
+							<shadow type="text">
+									<field name="TEXT">50</field>
+							</shadow>
+					</value>
+			</block>
+      <sep gap="36"></sep>
+			<block type="operator_mod">
+					<value name="NUM1">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+					<value name="NUM2">
+							<shadow type="math_number">
+									<field name="NUM"/>
+							</shadow>
+					</value>
+			</block>
+    </category>
+    <category name="%{BKY_CATEGORY_VARIABLES}" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE"></category>
+
+		<category name="circuitplayground" id="circuitplayground" colour="#0DA57A" secondaryColour="#0DA57A" iconURI="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAODElEQVR4Ae2dBXzbvNPHrzDew8zMzMw8ZsaGSikzo+O2Y147ZmbG9x0zMzNTYVTI/aVu3gNtHFlJ2jqt8vl9Bo3Psr6VTneWLVBNSUhwB43pVdAK9UBr0pO/B5I/Y8mfIvlzMNXdv8fe/Zmefrf4mJaT3KCq2Nj4euEL0piRpGGngc60m/x5mwg5dfuODXEqUQRo0j63BqmqeKY8AzrRnzTebNJ42bQhHaxrRLNAK/iBR9rTVQBo6ZJQEzSmlhQCUQERlpOKiFYR6cE7oW4l7A2mFwmI/qQBcoiwQqm4dwr9QJPygvOD8DC9fNcB5xNhBVc+gTMK9MKbzukftMLYu0MDqkyFRKOpn3GK2RJ11JKTVrnyyHWE02tS6fAkfEUuYBu9GOeSuLV4Sq6egi60V3D4CbUNYwmkt7hWbBb6bo+Sis4nwkqipdAl/ckKCkP8llTwNOvF1OiSgW80HoEf1xuPz7fIRDePtHJr2JpdkrH+750x7PO/sOv3LfDhjrFKjj8FOvHrigVDJzQiFbvBcgGvNh2GsS/vw3nuRbjIFe9paq2b6PXeRnygQ68yA/F6yyDc9shTaAYXRIB/6VSd+7HtT21Ybd0CrdCiYsDQip1Yo+yWXyyTQFjU5No38J2Gox0Ow/vrxljkUgxCVrOef4vdr+gEXXnDiCAVMbNUuNlXS2iDM2l29Xx8pekwh8Ggv/kIwKxpL77DattMp8blBMMUylhJ6iNIzyhkBkKV9chFdNWIdodR3SMZb7m5KwJC9eefXZWcJ7iMfYapvZKoO/iN7YpgSPr2t2l2B9Ltve8Uw6Da98Bj9HglPaVLWcH4Vcm9CReiaTVvcgEJf22X3YEcrfsQFxDq+F21qQpzYeJfjoWhMX1EUwhKGuDxNv25YFANfvSCvYFIwxWXPmpqVHq+XPAQP3AMDHqfQGvap7QBnmk5iBvI8Ieu2B1IgasrN5Af6ut4znkQ2ifc7wgnPpqnAep26okLOYF0f/qE3YFkV6vBDeS5NhG8551gbxh6GxqBzpi4gGg+XGt3IBsefZYLxk03d9vOrTF52Cklkv6KFIXzqsnXixXDWOBmxudaZNodSOPfOnIBmfzSu7ae+zpok1+yx6xqjo0VoXkrxb3E953NDgsMdz/0uOLeIZvfYu8lM22F0ZTJT2i74+eGEfirYTx+Rv6spi2ZKHyhRRZOqJPHBCPj6WNYvWuGw4A82Cker1avyQSDplfq/dGlZICpS8XPvYPxVx+/4j/r6pIZoYgNOYeqhNqE6FE54+/os3CK3z68FVSIGIT3dCOoALN8t+GLugH/+v5TrQdit2eOWwSx0M1MewYHDD4oOx5+Ug4GgVYLv29g+NdxLxqiMSukMd6Ifx8x/u17uhX/Hk4O+xPf9rLq+I9Dx4w6PI48Xs6wwXs+5gcVUQAWlR14C5t6Ti0RKH5UfzwGvLUV+z5xBgc9ep70iOPY9aM1+HSrQWWeev/tLw9c8/jzxY1Ph6Y89+q458HHMfiLeiUCwea+Xpgd+wEFYFG3495FnZ/G2nmjlcGgBLWmS5YMdvaaQxucSRTa754TVH8z6k9fI+bHvysLQ5I57h3s6CcXswiXla3/0ghhFgM9XT/MDbrNDITqZEAO9TOqhXG/PglPx3zKBENSTtwH+IxeZiKgE4LYVxNqTWcsGUr3XacIhiRvr4WqBWL076wIhiRTUCs5u2chsEctlnscXnKV2x9wmQvIUr9jqgWyPOInLiB7o7+0NuMysADZbMlALW0GmjlgUJ0NyFMtkIuxH3MBob6khjZFzvYGeRhdhbflKvawriciJ5ArgTfVCkSaWXGJ+h9Z+zrxHbn0uih3sKtWxLzAfC4g+wIuqxbIgZgvuWBQx+6iFazYF1ItLft0JV84Ya1yi/2PcgEZYtymWiDDQxtyAVkY/guL/eOlLrija4uYFgh4zeQC8oVhpGqBfOkdxAWkldHAeI60L0uLzGNZb8mu8j+pCMY4427VB4bjwuopgrEi8kdpuGKQGFVaD1nGWrmndH3xUMBVJhjr/E/j/boeqgfygC4R10d+zwTjYPQX+KQhTon9xf+GYexTQ+k9j0d1vXCG3wGLIMxENMEoRejOIJrRHRLaiE5nLcKYEf4HPqqPV36vhDK4VzxSf+Kt5CeG4djddz2u8D+Bm/zP4iK/oyj4rMG39JlOu8iaZnQFEoUvjvgFN0V9Vzw8dQ9ujp94hfDb1Yjfcyx6s1FVYsxtaU1Z5V6hKiCD/glkBdtBRH7DESKXIsSuRYhZgRAyHUHfvdI36P3GBGw5qB3GzfwV0+Z/j4ET6+OnKT7oohNYbSz/J5DzVg8IHI+Qfh6hL5ZU73wCaDUBll7pQNT0SsbUuT/h9dvVEBFKaNuJp/CnbjoWW2ekdPuDVr8csRihj5k2vrzEUwiGnpUGxsP+sbjuyHOICLIqLHJF47iG1m0WL6jzSHtD9kvB0wgM2uCMMh2lgY7Tw3DTp+LSva8gIjDJbHbBJv07yts1pL9GgXxq2WdkIPTIYYchKWy20wPpMqwFMwxJp6/ej7W9ZbK/+tSP5WOQsDnKYVCln3V6IJuPP60YCFXHoa3kZlo/SM8HYqlK3s0HpA+RZ2+nhfF4YDQdgriAjFn3oRyQBtLDN1iqxFN8QKj8hjstkM9SfLhgUK06+IJctN5OHkiaDUCMzgvkUxuArDz4oiwQ+SEryZYhi+/x5qohS86ph87mA5Lm/E5907FnuIB0GCLv1OWnvfoMhO7ZyoGEznR6IHS2pBTGKYZpL0NgOFVZYCgcqRSBoatOwMV7XmWGUWR2wUZ9OzEEhnrxAeupk0VsqZO0ypU6ecgvDtccep4pdeIzthFT6kRKLp6z+uWAsQjp5ywnF2NWVsrkYg3PZEya/TPm3apeKowtJID8Pl3PYuu08vQ7lZGm35dI6fc7ua6q9DvW9UnE5gPa30u/+49vgB8nGZXYWF5hb1BV3aDSCCHlXKEqaUyB/+whP3IbCh6B0GMjwpCTCMPOImQeQ8hYixA4xHkbL94fgQxLQNLvQOIRoNH34m8QUnxssCt8Z9MyIPDujTDgAMJULF1TiHpvR/B0Iv/im4Cw+hMEswuCpc/WtxECY2xaBiT1kqXsFeuLMPoqbXjrGnaGQOmhfhh+8QhHn0Vg+Vx4BCE4SknvWFTaysUYtoNFhKGn2GBI6rdb/UA2fICg5EOzujqB1X9ElvqeXaaD42YqgyEpeKR6YZi8EHg+g9sy2bfwHmB0kZ5Ll1XmUT4g1J+oFQj1Gzyf3a+x2D9G297SmxsEq8PVpHw+IKMuqxfI+Uf4gNysYX3Y0gjJYLFo096SPdirJx8Mqgk31QvkRg0E3o8xQda29d0XtKZNsun4KZxAxuWpF0huHT4YdHrsmSw3u1oPVotGNMhWbtRlPiCZR9ULZN/LfEDOPC5rl+09vzRAkXtleMZaPiBJC9ULZFwjPiDzfpRfOkpf0sBU5HJbPv0QJt5WBmNMNoKhu7oj9Kv3K3foIZFyw1WA0pfPXLScy5nN7ksmFyJEjFd/YNjTA6HQjd13ZLWWs3dJ4eZjDA+BJs6njS0PY+IthOgpJR9pECYgzNiGsPYswuZLCCuOI4xbixA6qOwbOnogwvz/R9h/AOHsSYRjRxBWricAxiLo/vPd/h2tz7gK3BFGNGePzJkLfTGKVjwia9g/E6HfnpJgaKzSayuCccB/VrGQi19JLxpL11EzwpTNCJ4ZjgfhlYGwfC2CORcB80rXAQIp8j/XEB6GsOIzhNvV/g0i3/1OeiUmyFre6pDkO3i3oUCrMnRDCB5OKjv+zp+6tJLficxC2J1HG966VhynUBwLg/YIzLOuaxcQYkvpuYaUO+n27hqEZF8En0TWZwnr2/qK2Fk2NwBt3I0X2WBImrrFcUD+bx0bDEmnT1CItp9XJ04Hmwt9tSnN19tSkczFymBIw1dEpv1hxGdKw5QyjZtr8y5v9tusUmPysKkyUu9QqnFr7Q9kwQrlMKhO2vi+L43Q2d67Iozim8P3RDiKfEBWnLA/kIMH+YDQXmXszgnDNBy4i3xsskdxZcIG88Gg2nLF/kAunuYDQiXNuJRpP3ik3QcOKdrU9+kWDIoqFNSfH8iGC/YHcvoEP5CQPkrPlwOa1HcdvdXRz0S32GcWRPtu8gGZtdP+QNZt4YORd5ljc2PxDyiTohPbKNpoeMZ2PiAZU+0PZOBkPiAr1inb8kgrdirrHdp8mCsYPhjhcKEyGHRmphftD0QvKh+2CrIRogZwLnqzvSh94bLZ7rHIgXyE6KGOCwwThyDcvuqIGMRMFArlWjRCR+aNiLOWIhwpkoex5zpCwijH57LEEQg5F+VBFOYgTJzPvrGkxqSFClHoFgysKx9jhiHM31tyCNtzg1z8egRjGT5f4t8DYdFKhNxLJYeojdsQkoYo2Xq1WcXbP11rOqkov0WHpeSxNO1uZ3/B4Veoj8gYhZCYheCp6DmXE3RdVUXevnsuEVYSLQZt6hNVG9yXvwrubXCvmqJJ+1x6j7yTaVPxk8uqLPQ36M723pfUD0K8WtzzW05yA9UXfepT5KJGEBWqc3gSh0m+wrmKp+lFcoG9iW6qAER+8S0HnfA6OH3Ri8+Ti+1LlF0BQVwDrdAHuqY8B5Wu0NUXNKjUmSaV86ysiGgx9XfSlnZVpUv6k6Ax+ZKGmUEdaBlAuFK86IAmSem5q4pMoTMZnekzmrwkkKaQxtsp3YPhFD12B7VFbdJpqz1mS1WQPEwvF+/irxU0d4PP6Lu7Ag2muvv3aPqz4u9oTH/SY9TU+P8D42qG6ETEFAoAAAAASUVORK5CYII=">
+			<block type="circuitplayground_whenButtonPressed">
+        <value name="BTN">
+          <shadow type="circuitplayground_menu_buttons" />
+        </value>
+      </block>
+      <block type="circuitplayground_isButtonPressed">
+        <value name="BTN">
+          <shadow type="circuitplayground_menu_buttons" />
+        </value>
+      </block>
+      <sep gap="36"></sep>
+      <block type="circuitplayground_setLights">
+        <value name="NEOPIXEL">
+          <shadow type="neopixelring">
+            <field name="NEOPIXEL_RING">[[1,"#FF0000"],[1,"#FF8000"],[1, "#FFF000"],[1,"#00FF00"],[1,"#00FF80"],[1,"#00FFFF"],[1, "#0080FF"],[1,"#0000FF"],[1,"#8000FF"],[1,"#FF00FF"]]</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="circuitplayground_setBrightness">
+					<value name="NUM">
+							<shadow type="math_number">
+                  <field name="NUM">20</field>
+							</shadow>
+					</value>
+      </block>
+      <block type="circuitplayground_changeBrightness">
+					<value name="NUM">
+							<shadow type="math_number">
+                  <field name="NUM">10</field>
+							</shadow>
+					</value>
+      </block>
+      <block type="circuitplayground_turnLights">
+					<value name="NUM">
+							<shadow type="math_number">
+                  <field name="NUM">1</field>
+							</shadow>
+					</value>
+      </block>
+    </category>
+
+  </xml>
+
+  <!-- Blocks -->
+  <div id="menu-bar">
+    <div id="save-button" class="menu-button" onclick="save()">Save</div>
+    <div id="load-button" class="menu-button" onclick="load()">Load</div>
+    <div id="project-name">
+      <input id="project-name-input" accept=".xml" type="text" value="Sample Project" />
+    </div>
+    <div id="download-icon" class="icon" onclick="download()">
+      <img src="img/icon--green-flag.svg">
+    </div>
+    <div id="bluetooth-icon" class="icon disconnected" onclick="scan()">
+      <img src="img/bluetooth.svg">
+    </div>
+  </div>
+  <div id="blocks"></div>
+  <div id="blocks-overlay" class="show-overlay"></div>
+  <input id="file-input" type="file" name="name" style="display: none;" onchange="loadProject(this)" />
+
+</body>
+</html>
