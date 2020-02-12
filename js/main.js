@@ -71,7 +71,6 @@ function onLoad() {
     window.workspace = workspace;
     window.workspace.getFlyout().autoClose = true;
     window.workspace.getFlyout().width_ = 0;
-    console.log(window.workspace.getFlyout());
     window.blockCount = 0;
 
     // Blockly.statusButtonCallback = (id) => console.log(id);
@@ -82,13 +81,6 @@ function onLoad() {
         console.log(blocksInfo.map(blockInfo => blockInfo.json));
         Blockly.defineBlocksWithJsonArray(blocksInfo.map(blockInfo => blockInfo.json));
         window.workspace.updateToolbox(videoToolbox);
-        setTimeout(() => {
-            console.log(window.workspace.getFlyout());
-            // window.workspace.getFlyout().hide();
-            // Blockly.svgResize(window.workspace);
-            window.workspace.deleteAreaToolbox_ = null;
-            console.log(window.workspace.deleteAreaToolbox_);
-        }, 20);
 
     });
 
@@ -202,8 +194,6 @@ async function download() {
         // out.push(utf8.charCodeAt(i));
     // }
     // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
-
-    return;
 
     let encoder = new TextEncoder();
 
