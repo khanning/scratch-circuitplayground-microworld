@@ -22,6 +22,10 @@ window.SYMBOLS = {
         type: 'prim',
         byte: 14
     },
+    control_wait_until: {
+        type: 'prim',
+        byte: 17
+    },
     control_repeat_until: {
         type: 'prim',
         byte: 18
@@ -70,6 +74,10 @@ window.SYMBOLS = {
         type: 'prim',
         byte: 28
     },
+    operator_not: {
+        type: 'prim',
+        byte: 32
+    },
     operator_random: {
         type: 'prim',
         byte: 37
@@ -78,12 +86,27 @@ window.SYMBOLS = {
         type: 'prim',
         byte: 25
     },
+    circuitplayground_whenMoved: {
+        type: 'hat',
+        byte: 0x82
+    },
+    circuitplayground_whenDark: {
+        type: 'hat',
+        byte: 0x83
+    },
     circuitplayground_whenButtonPressed: {
         type: 'hat'
     },
     circuitplayground_isButtonPressed: {
+        type: 'prim'
+    },
+    circuitplayground_isButtonPressed_left: {
         type: 'prim',
-        byte: 67
+        byte: 0x46
+    },
+    circuitplayground_isButtonPressed_right: {
+        type: 'prim',
+        byte: 0x47
     },
     circuitplayground_setLED: {
         type: 'prim',

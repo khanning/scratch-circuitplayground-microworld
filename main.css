@@ -2,12 +2,23 @@
     position: fixed;
     top: 0;
     left: 0;
+    padding-left: 5px;
     height: 48px;
     width: 100%;
     overflow: hidden;
     background-color: #212f47;
     color: white;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+  #save-button {
+    display: none;
+  }
+  #load-button {
+    display: none;
+  }
 }
 
 .menu-button {
@@ -36,6 +47,15 @@
     font-size: 1em;
     background-color: #1e2a3f;
     color: white;
+}
+
+#upload-icon {
+    background-color: #9342f5;
+}
+
+#upload-icon img {
+    width: 26px;
+    margin: 7px;
 }
 
 #download-icon {

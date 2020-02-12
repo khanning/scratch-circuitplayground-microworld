@@ -69,6 +69,10 @@ function onLoad() {
       }
     });
     window.workspace = workspace;
+    window.workspace.getFlyout().autoClose = true;
+    window.workspace.getFlyout().width_ = 0;
+    console.log(window.workspace.getFlyout());
+    window.blockCount = 0;
 
     // Blockly.statusButtonCallback = (id) => console.log(id);
 
@@ -78,6 +82,14 @@ function onLoad() {
         console.log(blocksInfo.map(blockInfo => blockInfo.json));
         Blockly.defineBlocksWithJsonArray(blocksInfo.map(blockInfo => blockInfo.json));
         window.workspace.updateToolbox(videoToolbox);
+        setTimeout(() => {
+            console.log(window.workspace.getFlyout());
+            // window.workspace.getFlyout().hide();
+            // Blockly.svgResize(window.workspace);
+            window.workspace.deleteAreaToolbox_ = null;
+            console.log(window.workspace.deleteAreaToolbox_);
+        }, 20);
+
     });
 
     workspace.addChangeListener(vm.blockListener);
@@ -118,8 +130,42 @@ function onLoad() {
 
     vm.extensionManager.loadExtensionURL('circuitplayground');
     vm.start();
-
   });
+}
+
+function getFlash(addr, len) {
+    return new Promise((resolve, reject) => {
+        let out = [0xfe];
+        for (let i=0; i<4; i++)
+            out[i+1] = (addr >> (i*8)) & 0xFF;
+        out.push(len);
+        sendAndWaitForResp(out, 0xed).then(reply => resolve(reply));
+    });
+}
+
+function timeout(len) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, len);
+    });
+}
+
+async function upload() {
+    let code = [];
+    for (let i=0; i<5000; i+=20) {
+        const resp = await getFlash(0x80000+i, 20);
+        if (resp.every(t => t === 255)) break;
+        var decoder = new TextDecoder('utf8');
+        console.log(decoder.decode(resp));
+        code = code.concat(Array.from(resp));
+    }
+    while (code.slice(-1)[0] === 255) code = code.slice(0, -1);
+    let arr = new Uint16Array(code);
+    const text = String.fromCharCode.apply(null, arr);
+    console.log(text);
+    var xml = Blockly.Xml.textToDom(text);
+    Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
 }
 
 async function download() {
@@ -135,19 +181,63 @@ async function download() {
     window.blockEncoder.compileStacks(stacks, vectors, procs);
     for (let i=0; i<(procs.length%8); i++) procs.push(255);
 
-    let out = [252, 0, 0, 5, 0];
-    out.push(vectors.length + procs.length);
-    out = out.concat(vectors, procs);
+    let out = vectors.concat(procs);
     console.log(out);
 
     console.log('Erasing flash');
     await eraseFlash(0);
-    // .then(() => {
-        console.log('Flash erased');
-        for (let i=0,n=0; i<out.length; i+=20, n++) {
-            await send(out.slice(i, i+20));
+    console.log('Flash erased');
+    await writeFlash(0, out);
+    console.log('Program written');
+
+    const dom = Blockly.Xml.workspaceToDom(window.workspace);
+    const xml = Blockly.Xml.domToText(dom);
+    console.log(xml);
+    // console.log(new Uint8Array(xml));
+    // let buf = new ArrayBuffer(xml.length*2);
+    // let bufView = new Uint16Array(buf);
+    // let utf8 = unescape(encodeURIComponent(xml));
+    // out = [];
+    // for (let i=0; i<utf8.length; i++) {
+        // out.push(utf8.charCodeAt(i));
+    // }
+    // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
+
+    return;
+
+    let encoder = new TextEncoder();
+
+    out = encoder.encode(xml);
+    out = Array.from(out);
+    console.log(out.length, out.length%4);
+
+    console.log('Erasing flash');
+    await eraseFlash(0x30000);
+    console.log('Flash erased');
+    if (out.length < 200) {
+        await writeFlash(0x30000, out);
+    } else {
+        for (let i=0; i<out.length; i+= 200) {
+            await writeFlash(0x30000+i, out.slice(i, i+200));
         }
-    // });
+    }
+    console.log('Program written');
+}
+
+function writeFlash(addr, data) {
+    return new Promise((resolve, reject) => {
+        addr += 0x50000;
+        let out = [252];
+        for (let i=0; i<4; i++) {
+            out[i+1] = (addr >> (i*8)) & 0xFF;
+            out[i+5] = (data.length >> (i*8)) & 0xFF;
+        }
+        out = out.concat(data);
+        // console.log(out);
+        sendAndWaitForResp(out, 0xcf).then(res => {
+            resolve();
+        });
+    });
 }
 
 function eraseFlash(addr) {
@@ -156,7 +246,9 @@ function eraseFlash(addr) {
         let out = [251];
         for (let i=0; i<4; i++)
             out[i+1] = (addr >> (i*8)) & 0xFF;
-        sendAndWait(out).then(() => resolve());
+        sendAndWaitForResp(out, 0xbf).then(res => {
+            resolve();
+        });
     });
 }
 
@@ -165,7 +257,6 @@ function save() {
     console.log(filename);
     var xml = Blockly.Xml.workspaceToDom(window.workspace);
     xml = Blockly.Xml.domToPrettyText(xml);
-    console.log(typeof(xml));
     var xmlFile = new Blob([xml], { type: "application/xml;charset=utf-8" });
     console.log(xmlFile)
     var a = document.createElement('a');
@@ -184,7 +275,7 @@ function loadProject(input) {
         var reader = new FileReader();
         reader.onload = function(e) {
             var xml = Blockly.Xml.textToDom(e.target.result);
-            Blockly.Xml.domToWorkspace(xml, window.workspace);
+            Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
             document.getElementById('project-name-input').value = projectName;
         }
         reader.readAsBinaryString(input.files[0]);

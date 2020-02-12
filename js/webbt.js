@@ -5,6 +5,8 @@ const READ_CHAR = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 var readChar, writeChar;
 
 var waitCallback = null;
+var waitCommand = null;
+var waitBuffer = null;
 
 var writeBuffer = [];
 
@@ -40,33 +42,40 @@ function onDisconnected(event) {
 }
 
 function handleReadChar(event) {
-    if (waitCallback) {
-        waitCallback();
-        waitCallback = null;
-    }
     var input = new Uint8Array(event.target.value.buffer);
     console.log(input);
+    if (waitCallback && waitCommand === input[0]) {
+        waitCallback(waitBuffer);
+        waitCallback = null;
+        waitCommand = null;
+    }
+    waitBuffer = input;
 }
 
-function sendAndWait(data) {
-    console.log(data.length);
-    if (data.length > 20) {
-        var output = new Uint8Array(data.splice(0, 20));
-        writeBuffer = writeBuffer.concat(data.slice(20));
+async function sendAndWaitForResp(data, cmd) {
+    if (data.length < 20) {
+        await send(data);
     } else {
-        var output = new Uint8Array(data);
+        for (let i=0; i<data.length; i+=20) {
+            await send(data.slice(i, i+20));
+        }
     }
-    console.log('Sending: ', output);
-    writeChar.writeValue(output);
     return new Promise((resolve, reject) => {
         waitCallback = resolve;
+        waitCommand = cmd;
     });
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function send(data) {
     return new Promise(res => {
         var output = new Uint8Array(data);
         console.log('Sending: ', output);
+        // let decoder = new TextDecoder('utf8');
+        // console.log(decoder.decode(output));
         writeChar.writeValue(output).then(() => {
             res();
         });

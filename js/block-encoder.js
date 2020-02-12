@@ -121,6 +121,8 @@ class BlockEncoder {
         }
         let hat = [this.BLOCK_SYMS[block._block.opcode].type, block._block.opcode];
         if (block._block.opcode === 'event_whenflagclicked') hat.push(8);
+        else if (block._block.opcode === 'circuitplayground_whenMoved') hat.push(0x82);
+        else if (block._block.opcode === 'circuitplayground_whenDark') hat.push(0x83);
         else if (block._block.opcode === 'circuitplayground_whenButtonPressed') {
             console.log(block._block.inputs.BTN);
             const val = block._target.blocks.getBlock(block._block.inputs.BTN.block).fields.buttons.value;
@@ -159,9 +161,18 @@ class BlockEncoder {
                 stack.push(['eol', 0]);
                 inputs = inputs.concat(stack);
             } else if (this._runtime._primitives[input.opcode]) {
-                let array = this.blockToArray(target, input);
-                if (array != null) inputs = inputs.concat(array);
-                else inputs.push(['byte', 0]);
+                const array = this.encodeBlock(new Block(block._target, input));
+                if (array[0][1] === 'circuitplayground_isButtonPressed') {
+                    array[0][1] += '_' + block._target.blocks.getBlock(input.inputs.BTN.block).fields.buttons.value;
+                }
+                if (array !== null) {
+                    if (block._block.opcode === 'control_wait_until' ||
+                        block._block.opcode === 'control_repeat_until') {
+                        array.unshift(['list', 1]);
+                        array.push(['eol', 0]);
+                    }
+                    inputs = inputs.concat(array);
+                } else inputs.push(['byte', 0]);
             } else {
                 for (const v in input.fields) {
                     let field = input.fields[v];
@@ -186,11 +197,14 @@ class BlockEncoder {
                         }
                     } else if (field.name === 'NEOPIXEL_RING') {
                         let value = field.value.split(',');
-                        for (let i=0; i<value.length; i+=2) {
-                            value[i] = parseInt(value[i]);
-                            value[i+1] = parseInt(value[i+1].substr(1), 16) * 100
-                            if (value[i] && value[i+1] > 0) {
-                                inputs.push(['number', value[i+1]]);
+                        console.log(value);
+                        for (let i=0; i<value.length; i+=4) {
+                            let state = parseInt(value[i]);
+                            let color = parseInt(value[i+1]) << 16 |
+                                   parseInt(value[i+2]) << 8 |
+                                   parseInt(value[i+3]);
+                            if (state && color > 0) {
+                                inputs.push(['number', color*100]);
                             } else {
                                 inputs.push(['byte', 0]);
                             }
