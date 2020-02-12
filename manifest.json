@@ -16,6 +16,5 @@
   "start_url": "/scratch-circuitplayground-microworld",
   "background_color": "#3367D6",
   "display": "standalone",
-  "orientation": "landscape",
   "theme_color": "#3367D6"
 }
