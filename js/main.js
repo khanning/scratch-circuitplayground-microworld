@@ -44,6 +44,34 @@ function onLoad() {
     var videoToolbox = document.getElementById('video-toolbox');
     window.videoToolbox = videoToolbox;
 
+    var statusBarHandle = document.getElementById('status-bar-handle');
+    var statusBarContent = document.getElementById('status-bar-content');
+    statusBarHandle.onclick = (event) => {
+        statusBarContent.classList.toggle('hidden');
+    };
+
+    registerConnectCallback(() => {
+      document.getElementById('bluetooth-icon').classList.remove('disconnected');
+      document.getElementById('bluetooth-icon').classList.add('connected');
+      document.getElementById('data-status').innerHTML = 'Connected';
+      window.pollTimer = setInterval(() => {
+          if (window.downloading) return;
+          sendAndWaitForResp([0xf5], 0xf5).then(resp => {
+              updateSensorData(resp);
+          });
+      }, 100);
+    });
+
+    registerDisconnectCallback(() => {
+      document.getElementById('bluetooth-icon').classList.remove('connected');
+      document.getElementById('bluetooth-icon').classList.add('disconnected');
+      document.getElementById('data-status').innerHTML = 'Disonnected';
+      if (window.pollTimer) {
+        clearInterval(window.pollTimer);
+        window.pollTimer = null;
+      }
+    });
+
     var workspace = Blockly.inject('blocks', {
       collapse: false,
       media: './media/',
@@ -123,6 +151,17 @@ function onLoad() {
     vm.extensionManager.loadExtensionURL('circuitplayground');
     vm.start();
   });
+}
+
+function updateSensorData(data) {
+  window.sensorData = data;
+  // console.log(data);
+  document.getElementById('data-button-left').innerHTML = (data[1]) ? 'pressed' : 'not pressed';
+  document.getElementById('data-button-right').innerHTML = (data[2]) ? 'pressed' : 'not pressed';
+  document.getElementById('data-light').innerHTML = (data[6]);
+  var motion = (data[4] << 8) | data[3];
+  if (motion & 0x8000) motion -= 0xFFFF;
+  document.getElementById('data-moving').innerHTML = (Math.abs(motion) > 2000) ? "true" : "false";
 }
 
 function getFlash(addr, len) {

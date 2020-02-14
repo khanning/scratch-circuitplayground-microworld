@@ -90,6 +90,33 @@
     padding: 4px;
 }
 
+#status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+#status-bar-handle {
+    width: 50px;
+    height: 20px;
+    margin: 0 auto;
+    background-color: black;
+    border-radius: 8px 8px 0 0;
+}
+
+#status-bar-content {
+    width: 100%;
+    background-color: black;
+    color: white;
+    padding: 5px 0;
+}
+
+#status-bar-content.hidden {
+    display: none;
+}
+
 #video-toolbox {
     display: none;
 }
@@ -172,4 +199,24 @@
 
 .flyoutClosed {
     transform: translate(-280px, 0) !important;
+}
+
+#status-table {
+    width: 80%;
+    margin: 0 auto;
+    font-size: .8em;
+}
+
+#status-table td {
+    width: 25%;
+}
+
+#status-table td.label {
+    text-align: right;
+}
+
+#status-table td.value {
+    text-align: left;
+    background-color: #171717;
+    border: 1px solid black;
 }

@@ -244,6 +244,40 @@
       <img src="img/upload.svg">
     </div>
   </div>
+  <div id="status-bar">
+    <div id="status-bar-handle">
+    </div>
+    <div id="status-bar-content" class="hidden">
+      <table id="status-table">
+        <tr>
+          <td class="label" colspan=2>Device Status:</td>
+          <td class="value" colspan=2 id="data-status">Disconnected</td>
+        </tr>
+        <tr>
+          <td class="label" colspan=2>FW Version:</td>
+          <td class="value" colspan=2></td>
+        </tr>
+        <tr>
+          <td class="label">Left Button:</td>
+          <td class="value" id="data-button-left"></td>
+          <td class="label">Right Button:</td>
+          <td class="value" id="data-button-right"></td>
+        </tr>
+        <tr>
+          <td class="label">Light Sensor:</td>
+          <td class="value" id="data-light"></td>
+          <td class="label">Temp Sensor:</td>
+          <td class="value"></td>
+        </tr>
+        <tr>
+          <td class="label">Moving?:</td>
+          <td class="value" id="data-moving"></td>
+          <td class="label">Temp Sensor:</td>
+          <td class="value"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
   <div id="blocks"></div>
   <div id="blocks-overlay" class="show-overlay"></div>
   <input id="file-input" type="file" name="name" style="display: none;" onchange="loadProject(this)" />

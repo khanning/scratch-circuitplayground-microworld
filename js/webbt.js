@@ -10,6 +10,9 @@ var waitBuffer = null;
 
 var writeBuffer = [];
 
+var connectCallback = null;
+var disconnectCallback = null;
+
 function scan() {
     navigator.bluetooth.requestDevice({ filters: [{ services: [MICROVM_UUID] }] })
     .then(device => {
@@ -29,16 +32,21 @@ function scan() {
             readChar = c;
         });
     }).then(() => {
-        document.getElementById('bluetooth-icon').classList.remove('disconnected');
-        document.getElementById('bluetooth-icon').classList.add('connected');
+        if (connectCallback) connectCallback();
     })
     .catch(error => console.log(error));
 }
 
+function registerConnectCallback(cb) {
+    connectCallback = cb;
+}
+
+function registerDisconnectCallback(cb) {
+    disconnectCallback = cb;
+}
+
 function onDisconnected(event) {
-    console.log('Bluetooth disconnected');
-    document.getElementById('bluetooth-icon').classList.remove('connected');
-    document.getElementById('bluetooth-icon').classList.add('disconnected');
+    if (disconnectCallback) disconnectCallback();
 }
 
 function handleReadChar(event) {
