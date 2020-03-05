@@ -205,10 +205,10 @@ async function upload() {
     let arr = new Uint16Array(code);
     const text = String.fromCharCode.apply(null, arr);
     console.log(text);
-    var xml = Blockly.Xml.textToDom(text);
-    Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
     window.pollinhibit = false;
     window.uploadbutton.src = 'img/upload.svg';
+    var xml = Blockly.Xml.textToDom(text);
+    Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
 }
 
 async function download() {
