@@ -12,6 +12,7 @@ class BlockEncoder {
         this.BLOCK_SYMS = symbols;
         this.FIELD_SYMS = fsyms;
         this._supportedHats = [];
+        this.variables = [];
     }
 
     getStacks () {
@@ -124,21 +125,25 @@ class BlockEncoder {
         else if (block._block.opcode === 'circuitplayground_whenMoved') hat.push(0x82);
         else if (block._block.opcode === 'circuitplayground_whenDark') hat.push(0x83);
         else if (block._block.opcode === 'circuitplayground_whenButtonPressed') {
-            console.log(block._block.inputs.BTN);
             const val = block._target.blocks.getBlock(block._block.inputs.BTN.block).fields.buttons.value;
             if (val === 'left') hat.push(0x80);
             else hat.push(0x81);
+        } else if  (block._block.opcode === 'circuitplayground_whenMeshBroadcast') {
+            const val = parseInt(block._target.blocks.getBlock(block._block.inputs.NUM.block).fields.NUM.value);
+            hat.push(0x90+val);
         }
         let out = []
         out.unshift(hat);
         let inputs = [];
+        let variables = [];
         for (const n in block._block.fields) {
             const field = block._block.fields[n];
             console.log(field);
             if (field.name === "VARIABLE") {
-                let name = block._block.fields[n].value;
-                let id = this._variables.indexOf(name);
-                if (id < 0) id = this._variables.push(name);
+                let name = field.value;
+                let id = this.variables.indexOf(name);
+                if (id < 0) id = this.variables.push(name) - 1;
+                console.log(name, id);
                 inputs.push(['byte', id]);
             } else if (field.name === 'STATE') {
                 if (field.value === 'on') inputs.push(['byte', 1]);
@@ -150,7 +155,6 @@ class BlockEncoder {
                 // console.log("Uknown field: " + block.fields[n]);
             // }
         }
-        console.log(block._block.inputs);
         for (const n in block._block.inputs) {
             let input = block._target.blocks.getBlock(block._block.inputs[n].block);
             if (n === 'SUBSTACK') {
@@ -175,8 +179,9 @@ class BlockEncoder {
                 } else inputs.push(['byte', 0]);
             } else {
                 for (const v in input.fields) {
+                    if (block._block.opcode === "circuitplayground_whenMeshBroadcast")
+                        break;
                     let field = input.fields[v];
-                    console.log(field);
                     if (field.name === 'NUM' ||
                         (field.name === 'TEXT' && !isNaN(field.value))) {
                         let val = parseFloat(field.value);
@@ -220,6 +225,13 @@ class BlockEncoder {
                         }
                     } else if (this.FIELD_SYMS[field.name])   {
                         inputs.push([this.FIELD_SYMS[field.name].type, this.FIELD_SYMS[field.name].values[field.value]]);
+                    } else if (field.name === 'NOTE') {
+                        const note = parseInt(field.value);
+                        const freq = parseInt(16.35 * (Math.pow(2, (note/12))));
+                        if (freq > 255)
+                            inputs.push(['number', freq])
+                        else
+                            inputs.push(['byte', freq])
                     } else {
                         console.log("Unknown field type: " + field.name);
                     }

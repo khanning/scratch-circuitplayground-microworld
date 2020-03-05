@@ -135,5 +135,17 @@ window.SYMBOLS = {
     circuitplayground_turnAnticlock: {
         type: 'prim',
         byte: 0x45
+    },
+    circuitplayground_startSpeakerFor: {
+        type: 'prim',
+        byte: 39
+    },
+    circuitplayground_whenMeshBroadcast: {
+        type: 'prim',
+        byte: 0x90
+    },
+    circuitplayground_broadcastMesh: {
+        type: 'prim',
+        byte: 0x48
     }
 };

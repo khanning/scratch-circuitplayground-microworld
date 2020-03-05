@@ -85,6 +85,7 @@ function send(data) {
         // let decoder = new TextDecoder('utf8');
         // console.log(decoder.decode(output));
         writeChar.writeValue(output).then(() => {
+            // setTimeout(res, 1000);
             res();
         });
     });

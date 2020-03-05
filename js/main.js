@@ -8,6 +8,8 @@ function onLoad() {
   var blockEncoder = new BlockEncoder(vm.runtime, window.SYMBOLS, window.FIELD_SYMBOLS);
   window.blockEncoder = blockEncoder;
 
+  window.connected = false;
+
   var defaultProject = {
     "targets": [
       {
@@ -51,18 +53,20 @@ function onLoad() {
     };
 
     registerConnectCallback(() => {
+      window.connected = true;
       document.getElementById('bluetooth-icon').classList.remove('disconnected');
       document.getElementById('bluetooth-icon').classList.add('connected');
       document.getElementById('data-status').innerHTML = 'Connected';
       window.pollTimer = setInterval(() => {
-          if (window.downloading) return;
+          if (window.pollinhibit) return;
           sendAndWaitForResp([0xf5], 0xf5).then(resp => {
               updateSensorData(resp);
           });
-      }, 100);
+      }, 1000);
     });
 
     registerDisconnectCallback(() => {
+      window.connected = false;
       document.getElementById('bluetooth-icon').classList.remove('connected');
       document.getElementById('bluetooth-icon').classList.add('disconnected');
       document.getElementById('data-status').innerHTML = 'Disonnected';
@@ -100,6 +104,8 @@ function onLoad() {
     window.workspace.getFlyout().autoClose = true;
     window.workspace.getFlyout().width_ = 0;
     window.blockCount = 0;
+
+    window.gfbutton = document.getElementById('download-icon-img');
 
     // Blockly.statusButtonCallback = (id) => console.log(id);
 
@@ -183,6 +189,7 @@ function timeout(len) {
 }
 
 async function upload() {
+    window.pollinhibit = true;
     let code = [];
     for (let i=0; i<5000; i+=20) {
         const resp = await getFlash(0x80000+i, 20);
@@ -197,11 +204,19 @@ async function upload() {
     console.log(text);
     var xml = Blockly.Xml.textToDom(text);
     Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
+    window.pollinhibit = false;
 }
 
 async function download() {
+    if (window.pollinhibit) return;
+    window.pollinhibit = true;
+    window.gfbutton.src = 'img/wait.svg';
     var stacks = window.blockEncoder.getStacks();
-    if (stacks.length === 0) return;
+    if (stacks.length === 0) {
+        window.pollinhibit = false;
+        window.gfbutton.src = 'img/icon--green-flag.svg';
+        return;
+    }
     for (let i=1; i<=stacks.length; i++) {
         console.log('Stack ' + i + ': ' + JSON.stringify(stacks[i-1]));
     }
@@ -215,42 +230,46 @@ async function download() {
     let out = vectors.concat(procs);
     console.log(out);
 
-    console.log('Erasing flash');
-    await eraseFlash(0);
-    console.log('Flash erased');
-    await writeFlash(0, out);
-    console.log('Program written');
+    if (window.connected) {
+        console.log('Erasing flash');
+        await eraseFlash(0);
+        console.log('Flash erased');
+        await writeFlash(0, out);
+        console.log('Program written');
 
-    const dom = Blockly.Xml.workspaceToDom(window.workspace);
-    const xml = Blockly.Xml.domToText(dom);
-    console.log(xml);
-    // console.log(new Uint8Array(xml));
-    // let buf = new ArrayBuffer(xml.length*2);
-    // let bufView = new Uint16Array(buf);
-    // let utf8 = unescape(encodeURIComponent(xml));
-    // out = [];
-    // for (let i=0; i<utf8.length; i++) {
-        // out.push(utf8.charCodeAt(i));
-    // }
-    // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
+        const dom = Blockly.Xml.workspaceToDom(window.workspace);
+        const xml = Blockly.Xml.domToText(dom);
+        console.log(xml);
+        // console.log(new Uint8Array(xml));
+        // let buf = new ArrayBuffer(xml.length*3);
+        // let bufView = new Uint16Array(buf);
+        // let utf8 = unescape(encodeURIComponent(xml));
+        // out = [];
+        // for (let i=0; i<utf8.length; i++) {
+            // out.push(utf8.charCodeAt(i));
+        // }
+        // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
 
-    let encoder = new TextEncoder();
+        // let encoder = new TextEncoder();
 
-    out = encoder.encode(xml);
-    out = Array.from(out);
-    console.log(out.length, out.length%4);
+        // out = encoder.encode(xml);
+        // out = Array.from(out);
+        // console.log(out.length, out.length%4);
 
-    console.log('Erasing flash');
-    await eraseFlash(0x30000);
-    console.log('Flash erased');
-    if (out.length < 200) {
-        await writeFlash(0x30000, out);
-    } else {
-        for (let i=0; i<out.length; i+= 200) {
-            await writeFlash(0x30000+i, out.slice(i, i+200));
-        }
+        // console.log('Erasing flash');
+        // await eraseFlash(0x30000);
+        // console.log('Flash erased');
+        // if (out.length < 200) {
+            // await writeFlash(0x30000, out);
+        // } else {
+            // for (let i=0; i<out.length; i+= 200) {
+                // await writeFlash(0x30000+i, out.slice(i, i+200));
+            // }
+        // }
+        // console.log('Program written');
     }
-    console.log('Program written');
+    window.pollinhibit = false;
+    window.gfbutton.src = 'img/icon--green-flag.svg';
 }
 
 function writeFlash(addr, data) {
