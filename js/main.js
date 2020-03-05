@@ -245,32 +245,32 @@ async function download() {
         const xml = Blockly.Xml.domToText(dom);
         console.log(xml);
         // console.log(new Uint8Array(xml));
-        let buf = new ArrayBuffer(xml.length*2);
-        let bufView = new Uint16Array(buf);
-        let utf8 = unescape(encodeURIComponent(xml));
-        out = [];
-        for (let i=0; i<utf8.length; i++) {
-            out.push(utf8.charCodeAt(i));
-        }
-        out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
+        // let buf = new ArrayBuffer(xml.length*2);
+        // let bufView = new Uint16Array(buf);
+        // let utf8 = unescape(encodeURIComponent(xml));
+        // out = [];
+        // for (let i=0; i<utf8.length; i++) {
+            // out.push(utf8.charCodeAt(i));
+        // }
+        // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
 
-        let encoder = new TextEncoder();
+        // let encoder = new TextEncoder();
 
-        out = encoder.encode(xml);
-        out = Array.from(out);
-        console.log(out.length, out.length%4);
+        // out = encoder.encode(xml);
+        // out = Array.from(out);
+        // console.log(out.length, out.length%4);
 
-        console.log('Erasing flash');
-        await eraseFlash(0x30000);
-        console.log('Flash erased');
-        if (out.length < 200) {
-            await writeFlash(0x30000, out);
-        } else {
-            for (let i=0; i<out.length; i+= 200) {
-                await writeFlash(0x30000+i, out.slice(i, i+200));
-            }
-        }
-        console.log('Program written');
+        // console.log('Erasing flash');
+        // await eraseFlash(0x30000);
+        // console.log('Flash erased');
+        // if (out.length < 200) {
+            // await writeFlash(0x30000, out);
+        // } else {
+            // for (let i=0; i<out.length; i+= 200) {
+                // await writeFlash(0x30000+i, out.slice(i, i+200));
+            // }
+        // }
+        // console.log('Program written');
     }
     window.pollinhibit = false;
     window.gfbutton.src = 'img/icon--green-flag.svg';
