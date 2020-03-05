@@ -57,12 +57,12 @@ function onLoad() {
       document.getElementById('bluetooth-icon').classList.remove('disconnected');
       document.getElementById('bluetooth-icon').classList.add('connected');
       document.getElementById('data-status').innerHTML = 'Connected';
-      window.pollTimer = setInterval(() => {
-          if (window.pollinhibit) return;
-          sendAndWaitForResp([0xf5], 0xf5).then(resp => {
-              updateSensorData(resp);
-          });
-      }, 1000);
+      // window.pollTimer = setInterval(() => {
+          // if (window.pollinhibit) return;
+          // sendAndWaitForResp([0xf5], 0xf5).then(resp => {
+              // updateSensorData(resp);
+          // });
+      // }, 1000);
     });
 
     registerDisconnectCallback(() => {
@@ -106,6 +106,7 @@ function onLoad() {
     window.blockCount = 0;
 
     window.gfbutton = document.getElementById('download-icon-img');
+    window.uploadbutton = document.getElementById('upload-icon-img');
 
     // Blockly.statusButtonCallback = (id) => console.log(id);
 
@@ -189,7 +190,9 @@ function timeout(len) {
 }
 
 async function upload() {
+    if (window.pollinhibit) return;
     window.pollinhibit = true;
+    window.uploadbutton.src = 'img/wait.svg';
     let code = [];
     for (let i=0; i<5000; i+=20) {
         const resp = await getFlash(0x80000+i, 20);
@@ -205,6 +208,7 @@ async function upload() {
     var xml = Blockly.Xml.textToDom(text);
     Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, window.workspace);
     window.pollinhibit = false;
+    window.uploadbutton.src = 'img/upload.svg';
 }
 
 async function download() {
@@ -241,32 +245,32 @@ async function download() {
         const xml = Blockly.Xml.domToText(dom);
         console.log(xml);
         // console.log(new Uint8Array(xml));
-        // let buf = new ArrayBuffer(xml.length*3);
-        // let bufView = new Uint16Array(buf);
-        // let utf8 = unescape(encodeURIComponent(xml));
-        // out = [];
-        // for (let i=0; i<utf8.length; i++) {
-            // out.push(utf8.charCodeAt(i));
-        // }
-        // out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
+        let buf = new ArrayBuffer(xml.length*2);
+        let bufView = new Uint16Array(buf);
+        let utf8 = unescape(encodeURIComponent(xml));
+        out = [];
+        for (let i=0; i<utf8.length; i++) {
+            out.push(utf8.charCodeAt(i));
+        }
+        out = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
 
-        // let encoder = new TextEncoder();
+        let encoder = new TextEncoder();
 
-        // out = encoder.encode(xml);
-        // out = Array.from(out);
-        // console.log(out.length, out.length%4);
+        out = encoder.encode(xml);
+        out = Array.from(out);
+        console.log(out.length, out.length%4);
 
-        // console.log('Erasing flash');
-        // await eraseFlash(0x30000);
-        // console.log('Flash erased');
-        // if (out.length < 200) {
-            // await writeFlash(0x30000, out);
-        // } else {
-            // for (let i=0; i<out.length; i+= 200) {
-                // await writeFlash(0x30000+i, out.slice(i, i+200));
-            // }
-        // }
-        // console.log('Program written');
+        console.log('Erasing flash');
+        await eraseFlash(0x30000);
+        console.log('Flash erased');
+        if (out.length < 200) {
+            await writeFlash(0x30000, out);
+        } else {
+            for (let i=0; i<out.length; i+= 200) {
+                await writeFlash(0x30000+i, out.slice(i, i+200));
+            }
+        }
+        console.log('Program written');
     }
     window.pollinhibit = false;
     window.gfbutton.src = 'img/icon--green-flag.svg';
