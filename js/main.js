@@ -123,18 +123,18 @@ function onLoad() {
     var flyoutWorkspace = workspace.getFlyout().getWorkspace();
     flyoutWorkspace.addChangeListener(vm.flyoutBlockListener);
 
-    vm.on('SCRIPT_GLOW_ON', function(data) {
-      workspace.glowStack(data.id, true);
-    });
-    vm.on('SCRIPT_GLOW_OFF', function(data) {
-      workspace.glowStack(data.id, false);
-    });
-    vm.on('BLOCK_GLOW_ON', function(data) {
-      workspace.glowBlock(data.id, true);
-    });
-    vm.on('BLOCK_GLOW_OFF', function(data) {
-      workspace.glowBlock(data.id, false);
-    });
+    // vm.on('SCRIPT_GLOW_ON', function(data) {
+      // workspace.glowStack(data.id, true);
+    // });
+    // vm.on('SCRIPT_GLOW_OFF', function(data) {
+      // workspace.glowStack(data.id, false);
+    // });
+    // vm.on('BLOCK_GLOW_ON', function(data) {
+      // workspace.glowBlock(data.id, true);
+    // });
+    // vm.on('BLOCK_GLOW_OFF', function(data) {
+      // workspace.glowBlock(data.id, false);
+    // });
     vm.on('VISUAL_REPORT', function(data) {
       workspace.reportValue(data.id, data.value);
     });
